@@ -1,0 +1,650 @@
+/* ============================================================
+   Paper.io 2 - Main Stylesheet
+   ============================================================ */
+
+/* Base reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #1a2a22;
+}
+
+body,
+button,
+input {
+  font-family: "PT Sans Caption", "Segoe UI", Arial, sans-serif;
+}
+
+/* ============================================================
+   Game container
+   ============================================================ */
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #1a2a22;
+}
+
+canvas {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+#view,
+#ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#view {
+  z-index: 1;
+}
+
+#ui {
+  z-index: 2;
+}
+
+/* ============================================================
+   Overlay / menu background
+   ============================================================ */
+
+#ui {
+  background: linear-gradient(160deg, rgba(20, 40, 30, 0.92) 0%, rgba(10, 20, 15, 0.96) 100%);
+  backdrop-filter: blur(2px);
+}
+
+#ui.hide {
+  display: none;
+}
+
+/* ============================================================
+   UI box (center menu card)
+   ============================================================ */
+
+.uibox {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 20px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.uibox .logo {
+  text-align: center;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo img {
+  width: 320px;
+  max-width: 90%;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+  transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+  transform: scale(1.03);
+}
+
+/* ============================================================
+   Tip text
+   ============================================================ */
+
+.uibox .tips {
+  height: 52px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.uibox .tip {
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  font-size: 17px;
+  line-height: 1.4;
+  padding: 8px 12%;
+  width: 100%;
+  animation: fadein 2s ease;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   Play form (input + button row)
+   ============================================================ */
+
+.uibox .play {
+  margin: 12px 8%;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+#nick {
+  background: #eef0d6;
+  border: 0;
+  border-bottom: 5px solid #a5a78e;
+  border-radius: 6px 0 0 6px;
+  padding: 8px 12px;
+  margin: 5px 0 5px 0;
+  font-size: 22px;
+  color: #444;
+  outline: none;
+  width: 100%;
+  flex: 1 1 auto;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+#nick:focus {
+  background: #fff;
+  border-color: #6fbb6f;
+}
+
+#nick::placeholder {
+  color: #aaa;
+  opacity: 1;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+
+button {
+  border: none;
+  border-bottom: 5px solid transparent;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0 18px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: filter 0.15s, transform 0.1s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button:active {
+  border-bottom-width: 0;
+  border-top: 5px solid rgba(0, 0, 0, 0.18);
+  transform: translateY(2px);
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+/* Yellow - play */
+button.yellow {
+  background: #eaec4b;
+  border-color: #a1a130;
+  color: #5a5c1a;
+}
+
+button.yellow:hover,
+button.yellow:focus {
+  background: #f5f75c;
+}
+
+/* Green - again / continue */
+button.green {
+  background: #6de044;
+  border-color: #44a02a;
+  color: #1e5010;
+}
+
+button.green:hover,
+button.green:focus {
+  background: #80f05a;
+}
+
+/* Orange */
+button.orange {
+  background: #ff9730;
+  border-color: #b85a10;
+  color: #3a1800;
+}
+
+/* Disabled */
+button.disabled {
+  background: #d8d8d8;
+  border-color: #9c9c9c;
+  color: #9c9c9c;
+  cursor: default;
+  filter: none;
+}
+
+button.disabled:hover,
+button.disabled:focus {
+  filter: none;
+}
+
+button.disabled:active {
+  border-top: none;
+  border-bottom: 5px solid #9c9c9c;
+  transform: none;
+}
+
+/* Play button - attach to input */
+#play {
+  flex: 0 0 120px;
+  margin-left: 0;
+  border-radius: 0 6px 6px 0;
+}
+
+#again,
+#menu {
+  flex: 1 1 auto;
+}
+
+/* ============================================================
+   Nav row (play again / menu)
+   ============================================================ */
+
+.nav {
+  margin: 8px 8%;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+/* ============================================================
+   Results screen
+   ============================================================ */
+
+.resultsimg {
+  width: 50%;
+  margin: auto;
+}
+
+.resultsimg img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.results {
+  display: flex;
+  justify-content: center;
+  font-size: 17px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  color: #fff;
+  gap: 8px;
+}
+
+.results .left {
+  text-align: right;
+  margin-right: 6px;
+  opacity: 0.75;
+}
+
+.newScore {
+  color: #7fffaa;
+  font-weight: 700;
+}
+
+/* ============================================================
+   Unsupported notice
+   ============================================================ */
+
+.uibox p.notsupported {
+  color: #ff7070;
+  font-size: 17px;
+  text-align: center;
+  padding: 0 10%;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   Footer - language switcher
+   ============================================================ */
+
+#footer {
+  position: relative;
+  z-index: 3;
+}
+
+#lng {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 4;
+  background: rgba(255, 255, 255, 0.92);
+  list-style-type: none;
+  margin: 0;
+  padding: 4px 8px 4px 4px;
+  border-top-right-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  box-shadow: 2px -2px 8px rgba(0, 0, 0, 0.15);
+}
+
+#lng li {
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+  transition: background 0.15s, color 0.15s;
+}
+
+#lng li:hover {
+  background: #c8c8ff;
+}
+
+#lng li.active {
+  background: #6666ee;
+  color: #fff;
+}
+
+/* ============================================================
+   Bottom link
+   ============================================================ */
+
+#bottom {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  right: 0;
+  color: #333;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 4px 10px;
+  border-top-left-radius: 10px;
+  font-size: 12px;
+  box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.12);
+}
+
+#bottom a,
+#bottom a:visited {
+  color: #333;
+  text-decoration: none;
+}
+
+#bottom a:hover {
+  color: #6666ee;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Right side / ad panel
+   ============================================================ */
+
+#right_side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 220px;
+  z-index: 3;
+  padding-top: 12px;
+  padding-right: 12px;
+  text-align: right;
+  pointer-events: none;
+}
+
+#rightbanner {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 220px;
+  z-index: 3;
+  padding-top: 12px;
+  padding-right: 12px;
+  text-align: right;
+  display: none;
+}
+
+/* ============================================================
+   Overlay (full-screen dark cover)
+   ============================================================ */
+
+#overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9;
+  display: none;
+}
+
+/* ============================================================
+   About / modal
+   ============================================================ */
+
+#about {
+  display: none;
+  z-index: 4;
+  position: absolute;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 80%;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal_box {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 32px;
+}
+
+.modal_scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* ============================================================
+   Skin selector
+   ============================================================ */
+
+.skins-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.skin {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 6px;
+  background: #d4cf3a;
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.skin:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.skin-view {
+  background: #fafdb8;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+
+.skin-view img {
+  display: block;
+  margin: 10px auto 0;
+}
+
+.skin-view h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.fadein  { animation: fadein  2s ease both; }
+.fadeout { animation: fadeout 2s ease both; }
+
+@keyframes kf_slider {
+  from { opacity: 0; pointer-events: none; }
+  to   { opacity: 1; pointer-events: auto; }
+}
+
+.slider-1 { animation: kf_slider 2s 0s both; }
+.slider-2 { animation: kf_slider 2s 1s both; }
+.slider-3 { animation: kf_slider 2s 2s both; }
+.slider-4 { animation: kf_slider 2s 3s both; }
+.slider-5 { animation: kf_slider 2s 4s both; }
+
+/* ============================================================
+   Utility
+   ============================================================ */
+
+.hide { display: none !important; }
+.show { display: block !important; }
+.noPadding { padding: 0 5px; }
+
+button img {
+  display: block;
+  margin: 2px auto 0;
+}
+
+#aipBranding { display: none !important; }
+
+#discord {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 3;
+  display: none;
+}
+
+#discord a img {
+  border-radius: 6px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media screen and (max-width: 560px) {
+  .uibox .play {
+    margin: 8px 2%;
+    flex-wrap: wrap;
+  }
+
+  #nick {
+    border-radius: 6px;
+    margin-bottom: 0;
+  }
+
+  #play {
+    flex: 1 1 100%;
+    border-radius: 6px;
+    margin-top: 4px;
+    font-size: 24px;
+  }
+
+  .nav {
+    margin: 8px 2%;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font-size: 22px;
+  }
+
+  .resultsimg {
+    width: 72%;
+  }
+
+  .uibox .tip {
+    font-size: 15px;
+    padding: 8px 4%;
+  }
+
+  .logo img {
+    width: 260px;
+  }
+
+  #about {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transform: none;
+    border-radius: 0;
+  }
+
+  .modal_box {
+    padding: 16px;
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .uibox .logo {
+    height: 60px;
+  }
+
+  .logo img {
+    width: 200px;
+  }
+
+  .uibox .tips {
+    height: 36px;
+  }
+}

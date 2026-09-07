@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#0038b8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="description" content="TheJews - capture territory, dominate the map!" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>TheJews</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/png" sizes="192x192" href="images/icon192.png" />
+    <link rel="apple-touch-icon" href="images/icon192.png" />
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/style3.css" />
+    <link rel="stylesheet" href="css/lobby.css" />
+    <script id="gamemonetize-sdk" src="js/sdk.js"></script>
+  </head>
+  <body>
+
+    <!-- ═══════════════════════════════════════════════
+         SPLASH SCREEN
+    ════════════════════════════════════════════════ -->
+    <div id="splash">
+      <div class="splash-stripe splash-stripe-top"></div>
+      <div class="splash-stripe splash-stripe-bottom"></div>
+
+      <div class="splash-star" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none">
+          <polygon points="50,4 96,79 4,79"  stroke="#fff" stroke-width="5" fill="none" opacity="0.35"/>
+          <polygon points="50,96 4,21 96,21" stroke="#fff" stroke-width="5" fill="none" opacity="0.35"/>
+        </svg>
+      </div>
+
+      <img src="images/logo.png" alt="TheJews" class="splash-logo" />
+
+      <div class="splash-title">
+        <span class="st-blue">T</span><span class="st-white">h</span><span class="st-blue">e</span><span class="st-white">J</span><span class="st-blue">e</span><span class="st-white">w</span><span class="st-blue">s</span>
+      </div>
+      <div class="splash-welcome">WELCOME</div>
+
+      <div class="splash-bar-wrap">
+        <div class="splash-bar-track">
+          <div id="splash-bar" class="splash-bar-fill"></div>
+        </div>
+        <div id="splash-label" class="splash-label">Loading game...</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         GAME (original structure - untouched)
+    ════════════════════════════════════════════════ -->
+    <div id="game" style="display:none">
+      <canvas class="fadein" id="view" width="922" height="888"></canvas>
+      <div id="ui_overlay"></div>
+
+      <!-- Original game UI - engine manages this entirely -->
+      <div id="ui" class="">
+        <div id="left_side"></div>
+        <div class="uibox">
+          <div class="logo"><img src="images/logo.png" alt="TheJews" /></div>
+          <div class="tips"><div class="tip"></div></div>
+          <form class="play">
+                 <input type="text" id="nick" name="nick" autocomplete="off"
+                   aria-hidden="true" tabindex="-1" maxlength="12" />
+            <button id="play" name="play" class="yellow" type="button">PLAY</button>
+          </form>
+          <div id="adbanner"></div>
+        </div>
+        <div id="right_side"></div>
+      </div>
+
+      <!-- ── Our overlay: server picker + Discord ── -->
+      </div>
+
+      <div id="tj-overlay">
+        <!-- TheJews title (top-left) -->
+        <div class="tj-brand">
+          <span class="st-blue">T</span><span class="st-white">h</span><span class="st-blue">e</span><span class="st-white">J</span><span class="st-blue">e</span><span class="st-white">w</span><span class="st-blue">s</span>
+        </div>
+
+        <!-- Discord + sound (top-right) -->
+        <div class="tj-topright">
+          <div id="discord-area">
+            <div id="discord-logged-out">
+              <a href="/auth/discord" id="discord-login-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.032.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+                </svg>
+                Login with Discord
+              </a>
+            </div>
+            <div id="discord-logged-in" style="display:none">
+              <img id="discord-avatar" src="" alt="" />
+              <span id="discord-username"></span>
+              <a href="/auth/logout" id="discord-logout-btn">Logout</a>
+            </div>
+          </div>
+          <button id="sound-toggle" class="sound-btn" title="Sound">
+            <svg id="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+            <svg id="sound-icon-off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+            </svg>
+          </button>
+          <button id="shop-toggle" class="shop-btn" type="button">Shop</button>
+        </div>
+
+        <!-- Server picker (center, shown only on menu) -->
+        <div id="tj-rooms" class="tj-rooms">
+          <div class="tj-rooms-title">Choose a Server</div>
+          <div id="room-list" class="room-list">
+            <div class="room-loading">Loading...</div>
+          </div>
+        </div>
+
+        <section id="tj-shop" class="tj-shop" hidden>
+          <div class="tj-shop-head">
+            <div>
+              <strong>Skin Shop</strong>
+              <span id="tj-coins">Coins: 250</span>
+            </div>
+            <button id="shop-close" type="button" aria-label="Close shop">X</button>
+          </div>
+          <div id="tj-shop-tabs" class="shop-tabs" role="tablist">
+            <button class="shop-tab shop-tab-active" type="button" data-shop-category="skins">Skins</button>
+            <button class="shop-tab" type="button" data-shop-category="trails">Trails</button>
+            <button class="shop-tab" type="button" data-shop-category="effects">Effects</button>
+          </div>
+          <div class="shop-category" data-shop-panel="skins">
+          <div class="skin-grid">
+            <button class="skin-card skin-card-selected" type="button" data-skin="israel" data-cost="0">
+              <span class="skin-preview skin-preview-israel"></span>
+              <span class="skin-card-name">Israel Flag</span>
+              <span class="skin-card-cost">Owned</span>
+            </button>
+            <button class="skin-card" type="button" data-skin="blue" data-cost="100">
+              <span class="skin-preview skin-preview-blue"></span>
+              <span class="skin-card-name">Blue Wave</span>
+              <span class="skin-card-cost">100 coins</span>
+            </button>
+            <button class="skin-card" type="button" data-skin="white" data-cost="150">
+              <span class="skin-preview skin-preview-white"></span>
+              <span class="skin-card-name">White Star</span>
+              <span class="skin-card-cost">150 coins</span>
+            </button>
+          </div>
+          </div>
+          <div class="shop-category" data-shop-panel="trails" hidden>
+            <div class="shop-placeholder">Choose a trail style for your territory.</div>
+            <div class="shop-mini-grid">
+              <button class="shop-mini-card" type="button" data-trail="israel">Israel Stripe</button>
+              <button class="shop-mini-card" type="button" data-trail="blue">Blue Line</button>
+            </div>
+          </div>
+          <div class="shop-category" data-shop-panel="effects" hidden>
+            <div class="shop-placeholder">Effects will appear here as you unlock them.</div>
+          </div>
+        </section>
+      </div>
+
+      <!-- In-game HUD -->
+      <div id="mp-hud" style="display:none">
+        <div id="mp-hud-inner">
+          <div class="mp-hud-row"><span class="mp-hud-label">Room</span><span id="mp-room-name">-</span></div>
+          <div class="mp-hud-row"><span class="mp-hud-label">Players</span><span id="mp-count">0/50</span></div>
+          <div class="mp-hud-row"><span class="mp-hud-label">You</span><span id="mp-my-name">-</span></div>
+        </div>
+        <div id="mp-panel">
+          <div class="mp-panel-title">Leaderboard</div>
+          <ul id="mp-player-list"></ul>
+        </div>
+      </div>
+      <div id="tj-game-title" class="tj-game-title" hidden>| TheJews |</div>
+
+      <!-- Chat -->
+      <div id="mp-chat" style="display:none">
+        <div id="mp-chat-messages"></div>
+        <div id="mp-chat-input-row">
+          <input type="text" id="mp-chat-input" placeholder="Chat..." maxlength="120" />
+          <button id="mp-chat-send" type="button">Send</button>
+        </div>
+      </div>
+
+      <div id="footer">
+        <ul id="lng">
+          <li class="active">EN</li><li>RU</li><li>TR</li>
+          <li>SP</li><li>FR</li><li>NL</li><li>PT</li><li>DE</li><li>IT</li>
+        </ul>
+        <div id="bottom"><a href="#">TheJews</a></div>
+      </div>
+      <div id="overlay"></div>
+
+    <div id="toast-container"></div>
+      <div id="account-required" class="account-required" hidden>
+        <div class="account-dialog">
+          <button id="account-required-close" class="account-close" type="button" aria-label="Close">X</button>
+          <strong>Discord account required</strong>
+          <p>Connect Discord before playing. Your Discord username will be used automatically.</p>
+          <a href="/auth/discord" id="account-required-login">Login with Discord</a>
+        </div>
+      </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/window.js"></script>
+    <script src="js/loader.js"></script>
+    <script src="js/sounds.js"></script>
+
+    <script>
+      (function () {
+        var revealed = false;
+        var reveal = function () {
+          if (revealed) return;
+          revealed = true;
+          var splash = document.getElementById('splash');
+          var game = document.getElementById('game');
+          if (splash) {
+            splash.style.opacity = '0';
+            splash.style.pointerEvents = 'none';
+            window.setTimeout(function () { splash.style.display = 'none'; }, 650);
+          }
+          if (game) game.style.display = 'block';
+          document.documentElement.setAttribute('data-tj-ready', 'true');
+        };
+
+        window.__theJewsReveal = reveal;
+        window.setTimeout(reveal, 3200);
+        window.addEventListener('error', function () {
+          window.setTimeout(reveal, 0);
+        });
+      }());
+    </script>
+
+    <script src="js/app-new-gm.js?26"></script>
+    <script src="js/game-hooks.js"></script>
+
+    <script>
+    (function () {
+      'use strict';
+
+      /* ══════════════════════════════════════════
+         SAVE SYSTEM (localStorage)
+      ══════════════════════════════════════════ */
+      var Save = {
+        KEY: 'thejews_save',
+        defaults: { name: '', soundOn: true, bestScore: 0, bestKills: 0, gamesPlayed: 0, lastRoom: '', coins: 250, skin: 'israel' },
+        load: function () {
+          try { return Object.assign({}, this.defaults, JSON.parse(localStorage.getItem(this.KEY) || '{}')); }
+          catch (e) { return Object.assign({}, this.defaults); }
+        },
+        write: function (data) {
+          try { localStorage.setItem(this.KEY, JSON.stringify(data)); } catch(e){}
+        },
+        update: function (patch) {
+          var d = this.load();
+          Object.assign(d, patch);
+          this.write(d);
+          return d;
+        }
+      };
+
+      var save = Save.load();
+      if (save.soundPreferenceSet === undefined) {
+        save = Save.update({ soundOn: true, soundPreferenceSet: true });
+      }
+      var coins = Number(save.coins || 250);
+      var selectedSkin = save.skin || 'israel';
+
+      window.__tjPlayerName = save.name || '';
+      window.__tjSkin = selectedSkin;
+      if (!window.__tjCanvasNamePatch) {
+        var originalFillText = CanvasRenderingContext2D.prototype.fillText;
+        var originalStrokeText = CanvasRenderingContext2D.prototype.strokeText;
+        CanvasRenderingContext2D.prototype.fillText = function (text, x, y, maxWidth) {
+          if (window.__tjPlayerName && String(text) === 'Player') text = window.__tjPlayerName;
+          return originalFillText.call(this, text, x, y, maxWidth);
+        };
+        CanvasRenderingContext2D.prototype.strokeText = function (text, x, y, maxWidth) {
+          if (window.__tjPlayerName && String(text) === 'Player') text = window.__tjPlayerName;
+          return originalStrokeText.call(this, text, x, y, maxWidth);
+        };
+        var originalFill = CanvasRenderingContext2D.prototype.fill;
+        var originalStroke = CanvasRenderingContext2D.prototype.stroke;
+        var originalFillRect = CanvasRenderingContext2D.prototype.fillRect;
+        var originalStrokeRect = CanvasRenderingContext2D.prototype.strokeRect;
+        var skinPalette = {
+          '#fcbf49': '#0038b8', '#ffdbac': '#ffffff', '#2a9d8f': '#0038b8',
+          '#99e550': '#ffffff', '#ff77aa': '#0038b8', '#ff99cc': '#ffffff',
+          '#6abe30': '#0038b8', '#68b0ab': '#ffffff'
+        };
+        function applySkinColor(context, property) {
+          var color = String(context[property] || '').toLowerCase();
+          var mapped = skinPalette[color];
+          if (mapped) context[property] = mapped;
+        }
+        CanvasRenderingContext2D.prototype.fill = function () {
+          if (window.__tjSkin === 'israel' || window.__tjSkin === 'blue') applySkinColor(this, 'fillStyle');
+          return originalFill.apply(this, arguments);
+        };
+        CanvasRenderingContext2D.prototype.stroke = function () {
+          if (window.__tjSkin === 'israel' || window.__tjSkin === 'blue') applySkinColor(this, 'strokeStyle');
+          return originalStroke.apply(this, arguments);
+        };
+        CanvasRenderingContext2D.prototype.fillRect = function () {
+          if (window.__tjSkin === 'israel' || window.__tjSkin === 'blue') applySkinColor(this, 'fillStyle');
+          return originalFillRect.apply(this, arguments);
+        };
+        CanvasRenderingContext2D.prototype.strokeRect = function () {
+          if (window.__tjSkin === 'israel' || window.__tjSkin === 'blue') applySkinColor(this, 'strokeStyle');
+          return originalStrokeRect.apply(this, arguments);
+        };
+        window.__tjCanvasNamePatch = true;
+      }
+
+      /* ══════════════════════════════════════════
+         SPLASH SCREEN
+      ══════════════════════════════════════════ */
+      var SPLASH_DURATION = 3200; // ms
+      var splashSteps = [
+        { pct: 15, label: 'Loading game engine...' },
+        { pct: 35, label: 'Loading assets...' },
+        { pct: 60, label: 'Connecting to servers...' },
+        { pct: 80, label: 'Loading your profile...' },
+        { pct: 100, label: 'Ready!' },
+      ];
+      var stepIdx = 0;
+      var bar     = document.getElementById('splash-bar');
+      var lbl     = document.getElementById('splash-label');
+
+      function advanceSplash() {
+        if (stepIdx >= splashSteps.length) return;
+        var s = splashSteps[stepIdx++];
+        bar.style.width = s.pct + '%';
+        lbl.textContent = s.label;
+        if (stepIdx < splashSteps.length) {
+          setTimeout(advanceSplash, SPLASH_DURATION / splashSteps.length);
+        }
+      }
+      advanceSplash();
+
+      setTimeout(function () {
+        var splash = document.getElementById('splash');
+        splash.style.transition = 'opacity 0.6s';
+        splash.style.opacity = '0';
+        setTimeout(function () {
+          splash.style.display = 'none';
+          document.getElementById('game').style.display = 'block';
+          initLobby();
+        }, 650);
+      }, SPLASH_DURATION);
+
+      /* ══════════════════════════════════════════
+         LOBBY
+      ══════════════════════════════════════════ */
+      var selectedRoom = null;
+      var gameStarted  = false;
+      var currentUser  = null;
+      var playBypass   = false;
+
+      function initLobby() {
+        document.getElementById('tj-game-title').hidden = true;
+        // Restore saved name
+        var nick = document.getElementById('nick');
+        if (nick && save.name) nick.value = save.name;
+
+        // Sound state
+        if (!save.soundOn) {
+          PaperSound.setEnabled(false);
+          document.getElementById('sound-icon-on').style.display  = 'none';
+          document.getElementById('sound-icon-off').style.display = '';
+        }
+
+        // Discord
+        fetch('/api/me').then(function(r){ return r.json(); }).then(function(user){
+          currentUser = user;
+          if (!user) return;
+          document.getElementById('discord-logged-out').style.display = 'none';
+          document.getElementById('discord-logged-in').style.display  = 'flex';
+          document.getElementById('discord-username').textContent = user.username;
+          if (user.avatar) document.getElementById('discord-avatar').src = user.avatar;
+          if (nick) nick.value = user.username;
+          Save.update({ name: user.username });
+        }).catch(function(){});
+
+        // Rooms
+        loadRooms();
+        setInterval(loadRooms, 5000);
+
+        // Watch #ui visibility to show/hide server picker
+        watchMenuState();
+      }
+
+      /* ── Rooms ───────────────────────────────── */
+      function loadRooms() {
+        fetch('/api/rooms').then(function(r){ return r.json(); }).then(renderRooms)
+          .catch(function(){ document.getElementById('room-list').innerHTML = '<div class="room-error">Cannot reach server</div>'; });
+      }
+
+      function renderRooms(rooms) {
+        if (gameStarted) return;
+        var list = document.getElementById('room-list');
+        if (!list) return;
+        list.innerHTML = '';
+        // Restore last selected room
+        var lastRoom = save.lastRoom || '';
+        rooms.forEach(function (room) {
+          var full = room.players >= room.max;
+          var card = document.createElement('div');
+          card.className = 'room-card' + (full ? ' room-full' : '');
+          card.dataset.id = room.id;
+          card.innerHTML =
+            '<div class="room-flag">' + room.flag + '</div>' +
+            '<div class="room-info">' +
+              '<div class="room-name">' + room.name + '</div>' +
+              '<div class="room-players"><span class="room-count' + (full ? ' room-count-full' : '') + '">' + room.players + '/' + room.max + '</span></div>' +
+            '</div>' +
+            '<div class="room-status ' + (full ? 'status-full' : 'status-open') + '">' + (full ? 'FULL' : 'JOIN') + '</div>';
+          if (!full) {
+            card.addEventListener('click', function () {
+              document.querySelectorAll('.room-card').forEach(function(c){ c.classList.remove('room-selected'); });
+              card.classList.add('room-selected');
+              selectedRoom = room.id;
+              Save.update({ lastRoom: room.id });
+            });
+          }
+          list.appendChild(card);
+        });
+        // Auto-select: prefer last room, else first open
+        var toSelect = list.querySelector('[data-id="' + lastRoom + '"]:not(.room-full)') ||
+                       list.querySelector('.room-card:not(.room-full)');
+        if (toSelect) toSelect.click();
+      }
+
+      function removeOriginalBranding() {
+        document.querySelectorAll('#ui *').forEach(function (element) {
+          if (element.children.length === 0 && /3kh0\.github\.io|Brought to you by/i.test(element.textContent)) {
+            element.remove();
+          }
+        });
+      }
+
+      /* ── Watch menu state (show/hide server picker) ── */
+      function watchMenuState() {
+        var rooms = document.getElementById('tj-rooms');
+        var hud   = document.getElementById('mp-hud');
+        var chat  = document.getElementById('mp-chat');
+
+        var observer = new MutationObserver(function () {
+          var ui = document.getElementById('ui');
+          removeOriginalBranding();
+          var isMenu = ui && !ui.classList.contains('hide') &&
+                       getComputedStyle(ui).display !== 'none';
+
+          if (isMenu && gameStarted) {
+            gameStarted = false;
+            if (window.MP && typeof MP.disconnect === 'function') MP.disconnect();
+            if (rooms) rooms.style.display = '';
+            if (hud) hud.style.display = 'none';
+            if (chat) chat.style.display = 'none';
+            document.getElementById('tj-shop').hidden = true;
+            document.getElementById('tj-game-title').hidden = true;
+            document.getElementById('tj-overlay').classList.remove('game-live');
+            loadRooms();
+          }
+
+          if (isMenu && !gameStarted) {
+            if (rooms) rooms.style.display = '';
+          } else {
+            if (rooms) rooms.style.display = 'none';
+            if (gameStarted) {
+              if (hud) hud.style.display  = '';
+              if (chat) chat.style.display = '';
+            }
+          }
+        });
+
+        var ui = document.getElementById('ui');
+        if (ui) observer.observe(ui, { attributes: true, childList: true, subtree: true, attributeFilter: ['class', 'style'] });
+      }
+
+      /* ── #play intercept (capture phase = before game engine) ── */
+      document.getElementById('play').addEventListener('click', function (event) {
+        if (!playBypass) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          var requiredModal = document.getElementById('account-required');
+          if (!currentUser) {
+            requiredModal.hidden = false;
+            return;
+          }
+          playBypass = true;
+          document.getElementById('play').click();
+          playBypass = false;
+          return;
+        }
+        PaperSound.unlock();
+        PaperSound.play('playerJoin');
+
+        var nick = document.getElementById('nick');
+        var name = String(currentUser.username || '').trim();
+        if (!name) {
+          document.getElementById('account-required').hidden = false;
+          return;
+        }
+        window.__tjPlayerName = name;
+        window.__tjSkin = selectedSkin;
+        if (nick) {
+          nick.value = name;
+          nick.dispatchEvent(new Event('input', { bubbles: true }));
+          nick.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        Save.update({ name: name, gamesPlayed: (save.gamesPlayed || 0) + 1 });
+        localStorage.setItem('nickName', name);
+        try {
+          var engineProfile = JSON.parse(localStorage.getItem('paper.io.storage') || '{}');
+          engineProfile.nickName = name;
+          engineProfile.skin = selectedSkin;
+          localStorage.setItem('paper.io.storage', JSON.stringify(engineProfile));
+          document.cookie = 'paper.io.storage=' + encodeURIComponent(JSON.stringify(engineProfile)) + '; path=/; max-age=31536000';
+        } catch (storageError) {}
+        save = Save.load();
+
+        if (!selectedRoom) {
+          var c = document.querySelector('.room-card:not(.room-full)');
+          if (c) { selectedRoom = c.dataset.id; c.classList.add('room-selected'); }
+        }
+
+        document.getElementById('mp-my-name').textContent   = name;
+        document.getElementById('mp-room-name').textContent = selectedRoom || '-';
+
+        fetch('/api/me').then(function(r){ return r.json(); }).then(function(user){
+          MP.connect(selectedRoom, name, user ? user.avatar : null, selectedSkin);
+        }).catch(function(){ MP.connect(selectedRoom, name, null, selectedSkin); });
+
+        gameStarted = true;
+        document.getElementById('tj-rooms').style.display = 'none';
+        document.getElementById('tj-shop').hidden = true;
+        document.getElementById('tj-game-title').hidden = false;
+        document.getElementById('tj-overlay').classList.add('game-live');
+        setTimeout(function(){
+          document.getElementById('mp-hud').style.display  = '';
+          document.getElementById('mp-chat').style.display = '';
+        }, 600);
+
+      }, true); // capture phase
+
+      /* ── Sound toggle ─────────────────────────── */
+      document.getElementById('sound-toggle').addEventListener('click', function () {
+        var on = PaperSound.toggle();
+        var soundOnIcon = document.getElementById('sound-icon-on');
+        var soundOffIcon = document.getElementById('sound-icon-off');
+        if (soundOnIcon) soundOnIcon.style.display = on ? '' : 'none';
+        if (soundOffIcon) soundOffIcon.style.display = on ? 'none' : '';
+        Save.update({ soundOn: on, soundPreferenceSet: true });
+      });
+
+      function updateShop() {
+        document.getElementById('tj-coins').textContent = 'Coins: ' + coins;
+        document.querySelectorAll('.skin-card').forEach(function (card) {
+          var isSelected = card.dataset.skin === selectedSkin;
+          card.classList.toggle('skin-card-selected', isSelected);
+          card.querySelector('.skin-card-cost').textContent = isSelected ? 'Selected' :
+            (card.dataset.cost === '0' ? 'Owned' : card.dataset.cost + ' coins');
+        });
+      }
+
+      document.getElementById('shop-toggle').addEventListener('click', function () {
+        var shop = document.getElementById('tj-shop');
+        shop.hidden = !shop.hidden;
+        document.getElementById('tj-rooms').style.pointerEvents = shop.hidden ? 'auto' : 'none';
+        if (!shop.hidden) updateShop();
+      });
+      document.getElementById('shop-close').addEventListener('click', function () {
+        document.getElementById('tj-shop').hidden = true;
+        document.getElementById('tj-rooms').style.pointerEvents = 'auto';
+      });
+      document.getElementById('account-required-close').addEventListener('click', function () {
+        document.getElementById('account-required').hidden = true;
+      });
+      document.querySelectorAll('[data-shop-category]').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var category = tab.dataset.shopCategory;
+          document.querySelectorAll('[data-shop-category]').forEach(function (item) {
+            item.classList.toggle('shop-tab-active', item === tab);
+          });
+          document.querySelectorAll('[data-shop-panel]').forEach(function (panel) {
+            panel.hidden = panel.dataset.shopPanel !== category;
+          });
+        });
+      });
+      document.querySelectorAll('.skin-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var cost = Number(card.dataset.cost || 0);
+          if (cost > coins && card.dataset.skin !== selectedSkin) return;
+          if (card.dataset.skin !== selectedSkin && cost > 0) coins -= cost;
+          selectedSkin = card.dataset.skin;
+          window.__tjSkin = selectedSkin;
+          Save.update({ skin: selectedSkin, coins: coins });
+          try {
+            var profile = JSON.parse(localStorage.getItem('paper.io.storage') || '{}');
+            profile.skin = selectedSkin;
+            localStorage.setItem('paper.io.storage', JSON.stringify(profile));
+            document.cookie = 'paper.io.storage=' + encodeURIComponent(JSON.stringify(profile)) + '; path=/; max-age=31536000';
+          } catch (skinStorageError) {}
+          updateShop();
+        });
+      });
+      updateShop();
+
+    })();
+    </script>
+
+    <div id="imaContainer" style="position:absolute;z-index:10000;top:0;left:0;width:100%;height:100%;background:#000;visibility:hidden;overflow:hidden;">
+      <video id="imaVideo"></video>
+    </div>
+  </body>
+</html>

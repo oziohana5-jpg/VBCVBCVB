@@ -1,0 +1,26 @@
+{
+  "short_name": "Paper.io 2",
+  "name": "Paper.io 2",
+  "description": "Capture territory, bite enemy tails and dominate the map!",
+  "icons": [
+    {
+      "src": "images/icon192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#1a2a22",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "scope": "./",
+  "theme_color": "#1a2a22",
+  "categories": ["games"]
+}
